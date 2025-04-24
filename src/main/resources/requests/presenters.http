@@ -1,0 +1,70 @@
+### POST request to create new track
+POST http://localhost:8080/api/tracks
+accept: */*
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "bio": "Expert in all things Java, including Spring"
+}
+###
+
+### POST request to create new track
+POST http://localhost:8080/api/tracks
+accept: */*
+Content-Type: application/json
+
+{
+  "name": "Melissa Testing",
+  "bio": "Expert in all things Java and Spring"
+}
+###
+
+### POST request to create new track
+POST http://localhost:8080/api/tracks
+accept: */*
+Content-Type: application/json
+
+{
+  "name": "Professor X",
+  "bio": ".NET Wizard"
+}
+###
+
+### POST request to create new track
+POST http://localhost:8080/api/tracks
+accept: */*
+Content-Type: application/json
+
+{
+  "name": "Delete Me",
+  "bio": "Only around for a short while"
+}
+###
+
+### PUT request to update existing track
+PUT http://localhost:8080/api/tracks/2
+accept: */*
+Content-Type: application/json
+
+{
+  "id": 2,
+  "name": "Melissa Testing",
+  "bio": "Expert in all things Java, Spring, and Spring Boot"
+}
+###
+
+### GET request to retrieve track by ID
+GET http://localhost:8080/api/tracks/2
+accept: */*
+###
+
+### DELETE request to delete existing track
+DELETE http://localhost:8080/api/tracks/4
+accept: */*
+###
+
+### GET request to retrieve all tracks
+GET http://localhost:8080/api/tracks
+accept: */*
+###
