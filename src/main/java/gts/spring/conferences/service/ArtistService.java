@@ -13,52 +13,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
-public class ArtistService {
 
-    private final ArtistRepository artistRepository;
-    private final ArtistMapper artistMapper;
+public class ArtistService extends CrudService<Artist, ArtistDTO,ArtistRepository, ArtistMapper> {
+    public ArtistService(ArtistRepository repository, ArtistMapper mapper) {super(repository, mapper);}
 
-    public List<ArtistDTO> findAll() {
-        return artistRepository.findAllByOrderByIdAsc()
-                .stream()
-                .map(artistMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    public ArtistDTO findById(Long id) {
-        return artistRepository.findById(id)
-                .map(artistMapper::toDTO)
-                .orElse(null);
-    }
-
-    @Transactional
-    public ArtistDTO create(ArtistDTO artistDTO) {
-        Artist artist = artistMapper.toEntity(artistDTO);
-        return artistMapper.toDTO(artistRepository.save(artist));
-    }
-
-    @Transactional
-    public ArtistDTO update(Long id, ArtistDTO artistDTO) {
-        Artist existing = artistRepository.findById(id)
-                .orElse(null);
-        if (existing == null) {
-            return null;
-        }
-        artistMapper.updateEntityFromDTO(artistDTO, existing);
-        return artistMapper.toDTO(artistRepository.save(existing));
-    }
-
+    @Override
     @Transactional
     public void delete(Long id) {
-        Artist artist = artistRepository.findById(id).orElse(null);
+        Artist artist = getRepository().findById(id).orElse(null);
         if (artist == null) return;
 
-        for (AlbumCollection session : artist.getAlbumCollections()) {
-            session.getArtists().remove(artist);
+        for (AlbumCollection albumCollection : artist.getAlbumCollections()) {
+            albumCollection.getArtists().remove(artist);
         }
 
         artist.getAlbumCollections().clear();
-        artistRepository.deleteById(id);
+        super.delete(id);
     }
+
 }

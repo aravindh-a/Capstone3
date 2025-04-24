@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class AlbumCollectionService {
+public class AlbumCollectionService  {
 
     private final AlbumCollectionRepository albumCollectionRepository;
     private final ArtistRepository artistRepository;
@@ -60,7 +60,7 @@ public class AlbumCollectionService {
     }
 
     @Transactional
-    public AlbumCollectionDTO registerAttendee(Long sessionId, Long attendeeId) {
+    public AlbumCollectionDTO registerArtist(Long sessionId, Long attendeeId) {
         AlbumCollection session = albumCollectionRepository.findById(sessionId)
                 .orElse(null);
         Artist artist = artistRepository.findById(attendeeId)
@@ -73,10 +73,10 @@ public class AlbumCollectionService {
     }
 
     @Transactional
-    public AlbumCollectionDTO assignPresenter(Long sessionId, Long presenterId) {
+    public AlbumCollectionDTO registerTrack(Long sessionId, Long trackId) {
         AlbumCollection session = albumCollectionRepository.findById(sessionId)
                 .orElse(null);
-        Track track = trackRepository.findById(presenterId)
+        Track track = trackRepository.findById(trackId)
                 .orElse(null);
         if (session == null || track == null) {
             return null;
@@ -85,18 +85,18 @@ public class AlbumCollectionService {
         return albumCollectionMapper.toDTO(albumCollectionRepository.save(session));
     }
 
-    public List<AlbumCollectionDTO> findByAttendeeId(Long attendeeId) {
+    public List<AlbumCollectionDTO> findByArtistId(Long artistId) {
         return albumCollectionRepository.findAllByOrderByIdAsc().stream()
                 .filter(session -> session.getArtists().stream()
-                        .anyMatch(attendee -> attendee.getId().equals(attendeeId)))
+                        .anyMatch(attendee -> attendee.getId().equals(artistId)))
                 .map(albumCollectionMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<AlbumCollectionDTO> findByPresenterId(Long presenterId) {
+    public List<AlbumCollectionDTO> findByTrackId(Long trackId) {
         return albumCollectionRepository.findAllByOrderByIdAsc().stream()
                 .filter(session -> session.getTracks().stream()
-                        .anyMatch(presenter -> presenter.getId().equals(presenterId)))
+                        .anyMatch(presenter -> presenter.getId().equals(trackId)))
                 .map(albumCollectionMapper::toDTO)
                 .collect(Collectors.toList());
     }

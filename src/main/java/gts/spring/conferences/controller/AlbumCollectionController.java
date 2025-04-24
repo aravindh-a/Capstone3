@@ -54,30 +54,30 @@ public class AlbumCollectionController {
     }
 
     @Operation(summary = "Register a new attendee in an existing conference session")
-    @PostMapping("/{sessionId}/attendees/{attendeeId}")
-    public ResponseEntity<AlbumCollectionDTO> registerArtist(@PathVariable Long sessionId, @PathVariable Long attendeeId) {
-        var session = albumCollectionService.registerAttendee(sessionId, attendeeId);
+    @PostMapping("/{sessionId}/attendees/{artistId}")
+    public ResponseEntity<AlbumCollectionDTO> registerArtist(@PathVariable Long sessionId, @PathVariable Long artistId) {
+        var session = albumCollectionService.registerArtist(sessionId, artistId);
         return session != null ? ResponseEntity.ok(session)
                 : ResponseEntity.notFound().build();
     }
 
     @Operation(summary = "Assign a new presenter to an existing conference session")
-    @PostMapping("/{sessionId}/presenters/{presenterId}")
-    public ResponseEntity<AlbumCollectionDTO> assignTrack(@PathVariable Long sessionId, @PathVariable Long presenterId) {
-        var session = albumCollectionService.assignPresenter(sessionId, presenterId);
+    @PostMapping("/{sessionId}/presenters/{trackId}")
+    public ResponseEntity<AlbumCollectionDTO> registerTrack(@PathVariable Long sessionId, @PathVariable Long trackId) {
+        var session = albumCollectionService.registerTrack(sessionId, trackId);
         return session != null ? ResponseEntity.ok(session)
                 : ResponseEntity.notFound().build();
     }
 
     @Operation(summary = "Get all conference sessions in which the given attendee is registered")
-    @GetMapping("/attendee/{attendeeId}")
-    public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByArtist(@PathVariable Long attendeeId) {
-        return ResponseEntity.ok(albumCollectionService.findByAttendeeId(attendeeId));
+    @GetMapping("/attendee/{artistId}")
+    public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByArtist(@PathVariable Long artistId) {
+        return ResponseEntity.ok(albumCollectionService.findByArtistId(artistId));
     }
 
     @Operation(summary = "Get all conference sessions to which the given presenter is assigned")
-    @GetMapping("/presenter/{presenterId}")
-    public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByTrack(@PathVariable Long presenterId) {
-        return ResponseEntity.ok(albumCollectionService.findByPresenterId(presenterId));
+    @GetMapping("/presenter/{trackId}")
+    public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByTrack(@PathVariable Long trackId) {
+        return ResponseEntity.ok(albumCollectionService.findByTrackId(trackId));
     }
 }

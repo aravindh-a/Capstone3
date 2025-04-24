@@ -18,6 +18,7 @@ import java.util.Set;
 public class AlbumCollection extends BaseEntity {
 
     private String albumName;
+    private String genre;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(

@@ -16,7 +16,9 @@ import java.util.Set;
 @SuperBuilder
 public class Artist extends BaseEntity {
 
-    private String name;
+    private String artistName;
+    private String country;
+
 
     @ManyToMany(mappedBy = "artists", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<AlbumCollection> albumCollections = new HashSet<>();

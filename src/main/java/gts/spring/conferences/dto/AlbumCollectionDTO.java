@@ -12,15 +12,17 @@ import java.util.List;
 
 @Getter
 @Setter
-@Schema(name = "AlbumCollection", description = "Details about a Conference Session")
-public class AlbumCollectionDTO {
+@Schema(name = "AlbumCollection", description = "Details about a album")
+public class AlbumCollectionDTO extends BaseEntityDTO {
 
-    @Schema(description = "The unique identifier of the session", example = "1")
-    private Long id;
 
-    @Schema(description = "The title of the session", example = "Spring Boot Deep Dive")
+    @Schema(description = "Title of the album", example = "Spring Boot Deep Dive")
     @NotBlank
     private String albumName;
+
+    @Schema(description = "Title of the album", example = "Spring Boot Deep Dive")
+    @NotBlank
+    private String genre;
 
     @Schema(description = "List of associated presenters")
     private List<TrackDTO> tracks;

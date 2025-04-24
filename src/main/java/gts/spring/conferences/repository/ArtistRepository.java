@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ArtistRepository extends JpaRepository<Artist, Long> {
+public interface ArtistRepository extends BaseRepository<Artist> {
 
     List<Artist> findAllByOrderByIdAsc();
 }
