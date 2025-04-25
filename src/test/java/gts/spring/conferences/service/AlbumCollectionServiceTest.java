@@ -19,13 +19,13 @@ import static org.mockito.Mockito.*;
 
 class AlbumCollectionServiceTest {
 
-    @Mock private AlbumCollectionRepository sessionRepository;
+    @Mock private AlbumCollectionRepository albumCollectionRepository;
     @Mock private ArtistRepository artistRepository;
     @Mock private TrackRepository trackRepository;
-    @Mock private AlbumCollectionMapper sessionMapper;
+    @Mock private AlbumCollectionMapper albumCollectionMapper;
 
     @InjectMocks
-    private AlbumCollectionService sessionService;
+    private AlbumCollectionService albumCollectionService;
 
     @BeforeEach
     void setup() {
@@ -34,33 +34,33 @@ class AlbumCollectionServiceTest {
 
     @Test
     void findAll_ShouldReturnDTOList() {
-        AlbumCollection session = new AlbumCollection();
+        AlbumCollection albumCollection = new AlbumCollection();
         AlbumCollectionDTO dto = new AlbumCollectionDTO();
-        when(sessionRepository.findAllByOrderByIdAsc()).thenReturn(List.of(session));
-        when(sessionMapper.toDTO(session)).thenReturn(dto);
+        when(albumCollectionRepository.findAllByOrderByIdAsc()).thenReturn(List.of(albumCollection));
+        when(albumCollectionMapper.toDTO(albumCollection)).thenReturn(dto);
 
-        List<AlbumCollectionDTO> result = sessionService.findAll();
+        List<AlbumCollectionDTO> result = albumCollectionService.findAll();
 
         assertThat(result).containsExactly(dto);
     }
 
     @Test
     void findById_ShouldReturnDTO_WhenFound() {
-        AlbumCollection session = new AlbumCollection();
+        AlbumCollection albumCollection = new AlbumCollection();
         AlbumCollectionDTO dto = new AlbumCollectionDTO();
-        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
-        when(sessionMapper.toDTO(session)).thenReturn(dto);
+        when(albumCollectionRepository.findById(1L)).thenReturn(Optional.of(albumCollection));
+        when(albumCollectionMapper.toDTO(albumCollection)).thenReturn(dto);
 
-        AlbumCollectionDTO result = sessionService.findById(1L);
+        AlbumCollectionDTO result = albumCollectionService.findById(1L);
 
         assertThat(result).isEqualTo(dto);
     }
 
     @Test
     void findById_ShouldReturnNull_WhenNotFound() {
-        when(sessionRepository.findById(1L)).thenReturn(Optional.empty());
+        when(albumCollectionRepository.findById(1L)).thenReturn(Optional.empty());
 
-        AlbumCollectionDTO result = sessionService.findById(1L);
+        AlbumCollectionDTO result = albumCollectionService.findById(1L);
 
         assertThat(result).isNull();
     }
@@ -68,12 +68,12 @@ class AlbumCollectionServiceTest {
     @Test
     void create_ShouldSaveAndReturnDTO() {
         AlbumCollectionDTO dto = new AlbumCollectionDTO();
-        AlbumCollection session = new AlbumCollection();
-        when(sessionMapper.toEntity(dto)).thenReturn(session);
-        when(sessionRepository.save(session)).thenReturn(session);
-        when(sessionMapper.toDTO(session)).thenReturn(dto);
+        AlbumCollection albumCollection = new AlbumCollection();
+        when(albumCollectionMapper.toEntity(dto)).thenReturn(albumCollection);
+        when(albumCollectionRepository.save(albumCollection)).thenReturn(albumCollection);
+        when(albumCollectionMapper.toDTO(albumCollection)).thenReturn(dto);
 
-        AlbumCollectionDTO result = sessionService.create(dto);
+        AlbumCollectionDTO result = albumCollectionService.create(dto);
 
         assertThat(result).isEqualTo(dto);
     }
@@ -81,115 +81,115 @@ class AlbumCollectionServiceTest {
     @Test
     void update_ShouldModifyAndReturnDTO_WhenFound() {
         AlbumCollectionDTO dto = new AlbumCollectionDTO();
-        AlbumCollection session = new AlbumCollection();
-        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
-        when(sessionRepository.save(session)).thenReturn(session);
-        when(sessionMapper.toDTO(session)).thenReturn(dto);
+        AlbumCollection albumCollection = new AlbumCollection();
+        when(albumCollectionRepository.findById(1L)).thenReturn(Optional.of(albumCollection));
+        when(albumCollectionRepository.save(albumCollection)).thenReturn(albumCollection);
+        when(albumCollectionMapper.toDTO(albumCollection)).thenReturn(dto);
 
-        AlbumCollectionDTO result = sessionService.update(1L, dto);
+        AlbumCollectionDTO result = albumCollectionService.update(1L, dto);
 
-        verify(sessionMapper).updateEntityFromDTO(dto, session);
+        verify(albumCollectionMapper).updateEntityFromDTO(dto, albumCollection);
         assertThat(result).isEqualTo(dto);
     }
 
     @Test
     void update_ShouldReturnNull_WhenNotFound() {
-        when(sessionRepository.findById(1L)).thenReturn(Optional.empty());
+        when(albumCollectionRepository.findById(1L)).thenReturn(Optional.empty());
 
-        AlbumCollectionDTO result = sessionService.update(1L, new AlbumCollectionDTO());
+        AlbumCollectionDTO result = albumCollectionService.update(1L, new AlbumCollectionDTO());
 
         assertThat(result).isNull();
     }
 
     @Test
     void delete_ShouldCallRepository() {
-        sessionService.delete(1L);
+        albumCollectionService.delete(1L);
 
-        verify(sessionRepository).deleteById(1L);
+        verify(albumCollectionRepository).deleteById(1L);
     }
 
     @Test
-    void registerAttendee_ShouldAddAttendee_WhenBothExist() {
-        AlbumCollection session = new AlbumCollection();
-        session.setArtists(new HashSet<>());
+    void registerArtist_ShouldAddArtist_WhenBothExist() {
+        AlbumCollection albumCollection = new AlbumCollection();
+        albumCollection.setArtists(new HashSet<>());
         Artist artist = new Artist();
         AlbumCollectionDTO dto = new AlbumCollectionDTO();
 
-        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(albumCollectionRepository.findById(1L)).thenReturn(Optional.of(albumCollection));
         when(artistRepository.findById(2L)).thenReturn(Optional.of(artist));
-        when(sessionRepository.save(session)).thenReturn(session);
-        when(sessionMapper.toDTO(session)).thenReturn(dto);
+        when(albumCollectionRepository.save(albumCollection)).thenReturn(albumCollection);
+        when(albumCollectionMapper.toDTO(albumCollection)).thenReturn(dto);
 
-        AlbumCollectionDTO result = sessionService.registerAttendee(1L, 2L);
+        AlbumCollectionDTO result = albumCollectionService.registerArtist(1L, 2L);
 
-        assertThat(session.getArtists()).contains(artist);
+        assertThat(albumCollection.getArtists()).contains(artist);
         assertThat(result).isEqualTo(dto);
     }
 
     @Test
-    void registerAttendee_ShouldReturnNull_WhenSessionOrAttendeeMissing() {
-        when(sessionRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThat(sessionService.registerAttendee(1L, 2L)).isNull();
+    void registerArtist_ShouldReturnNull_WhenalbumCollectionorArtistMissing() {
+        when(albumCollectionRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThat(albumCollectionService.registerArtist(1L, 2L)).isNull();
 
-        when(sessionRepository.findById(1L)).thenReturn(Optional.of(new AlbumCollection()));
+        when(albumCollectionRepository.findById(1L)).thenReturn(Optional.of(new AlbumCollection()));
         when(artistRepository.findById(2L)).thenReturn(Optional.empty());
-        assertThat(sessionService.registerAttendee(1L, 2L)).isNull();
+        assertThat(albumCollectionService.registerArtist(1L, 2L)).isNull();
     }
 
     @Test
-    void assignPresenter_ShouldAddPresenter_WhenBothExist() {
-        AlbumCollection session = new AlbumCollection();
-        session.setTracks(new HashSet<>());
+    void registerTrack_ShouldAddTrack_WhenBothExist() {
+        AlbumCollection albumCollection = new AlbumCollection();
+        albumCollection.setTracks(new HashSet<>());
         Track track = new Track();
         AlbumCollectionDTO dto = new AlbumCollectionDTO();
 
-        when(sessionRepository.findById(1L)).thenReturn(Optional.of(session));
+        when(albumCollectionRepository.findById(1L)).thenReturn(Optional.of(albumCollection));
         when(trackRepository.findById(2L)).thenReturn(Optional.of(track));
-        when(sessionRepository.save(session)).thenReturn(session);
-        when(sessionMapper.toDTO(session)).thenReturn(dto);
+        when(albumCollectionRepository.save(albumCollection)).thenReturn(albumCollection);
+        when(albumCollectionMapper.toDTO(albumCollection)).thenReturn(dto);
 
-        AlbumCollectionDTO result = sessionService.assignPresenter(1L, 2L);
+        AlbumCollectionDTO result = albumCollectionService.registerTrack(1L, 2L);
 
-        assertThat(session.getTracks()).contains(track);
+        assertThat(albumCollection.getTracks()).contains(track);
         assertThat(result).isEqualTo(dto);
     }
 
     @Test
-    void assignPresenter_ShouldReturnNull_WhenSessionOrPresenterMissing() {
-        when(sessionRepository.findById(1L)).thenReturn(Optional.empty());
-        assertThat(sessionService.assignPresenter(1L, 2L)).isNull();
+    void registerTrack_ShouldReturnNull_WhenAlbumsOrTrackMissing() {
+        when(albumCollectionRepository.findById(1L)).thenReturn(Optional.empty());
+        assertThat(albumCollectionService.registerTrack(1L, 2L)).isNull();
 
-        when(sessionRepository.findById(1L)).thenReturn(Optional.of(new AlbumCollection()));
+        when(albumCollectionRepository.findById(1L)).thenReturn(Optional.of(new AlbumCollection()));
         when(trackRepository.findById(2L)).thenReturn(Optional.empty());
-        assertThat(sessionService.assignPresenter(1L, 2L)).isNull();
+        assertThat(albumCollectionService.registerTrack(1L, 2L)).isNull();
     }
 
     @Test
-    void findByAttendeeId_ShouldFilterSessionsWithAttendee() {
+    void findByArtistId_ShouldFilterAlbumsWithArtist() {
         Artist artist = new Artist(); artist.setId(1L);
-        AlbumCollection session = new AlbumCollection();
-        session.setArtists(Set.of(artist));
+        AlbumCollection albumCollection = new AlbumCollection();
+        albumCollection.setArtists(Set.of(artist));
         AlbumCollectionDTO dto = new AlbumCollectionDTO();
 
-        when(sessionRepository.findAllByOrderByIdAsc()).thenReturn(List.of(session));
-        when(sessionMapper.toDTO(session)).thenReturn(dto);
+        when(albumCollectionRepository.findAllByOrderByIdAsc()).thenReturn(List.of(albumCollection));
+        when(albumCollectionMapper.toDTO(albumCollection)).thenReturn(dto);
 
-        List<AlbumCollectionDTO> result = sessionService.findByAttendeeId(1L);
+        List<AlbumCollectionDTO> result = albumCollectionService.findByArtistId(1L);
 
         assertThat(result).containsExactly(dto);
     }
 
     @Test
-    void findByPresenterId_ShouldFilterSessionsWithPresenter() {
+    void findByTrackId_ShouldFilterAlbumsWithTrack() {
         Track track = new Track(); track.setId(1L);
-        AlbumCollection session = new AlbumCollection();
-        session.setTracks(Set.of(track));
+        AlbumCollection albumCollection = new AlbumCollection();
+        albumCollection.setTracks(Set.of(track));
         AlbumCollectionDTO dto = new AlbumCollectionDTO();
 
-        when(sessionRepository.findAllByOrderByIdAsc()).thenReturn(List.of(session));
-        when(sessionMapper.toDTO(session)).thenReturn(dto);
+        when(albumCollectionRepository.findAllByOrderByIdAsc()).thenReturn(List.of(albumCollection));
+        when(albumCollectionMapper.toDTO(albumCollection)).thenReturn(dto);
 
-        List<AlbumCollectionDTO> result = sessionService.findByPresenterId(1L);
+        List<AlbumCollectionDTO> result = albumCollectionService.findByTrackId(1L);
 
         assertThat(result).containsExactly(dto);
     }

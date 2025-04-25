@@ -30,11 +30,12 @@ class TrackServiceTest {
     }
 
     @Test
-    void findAll_ShouldReturnListOfPresenterDTOs() {
+    void findAll_ShouldReturnListOfTrackDTOs() {
         Track track = new Track();
         TrackDTO trackDTO = new TrackDTO();
         List<Track> tracks = List.of(track);
         List<TrackDTO> expected = List.of(trackDTO);
+
 
         when(trackRepository.findAllByOrderByIdAsc()).thenReturn(tracks);
         when(trackMapper.toDTO(track)).thenReturn(trackDTO);
@@ -46,7 +47,7 @@ class TrackServiceTest {
     }
 
     @Test
-    void findById_ShouldReturnPresenterDTO_WhenFound() {
+    void findById_ShouldReturnTrackDTO_WhenFound() {
         Long id = 1L;
         Track track = new Track();
         TrackDTO trackDTO = new TrackDTO();
@@ -71,7 +72,7 @@ class TrackServiceTest {
     }
 
     @Test
-    void create_ShouldSaveAndReturnPresenterDTO() {
+    void create_ShouldSaveAndReturnTrackDTO() {
         TrackDTO dto = new TrackDTO();
         Track entity = new Track();
 
@@ -86,7 +87,7 @@ class TrackServiceTest {
     }
 
     @Test
-    void update_ShouldModifyAndReturnUpdatedPresenterDTO_WhenFound() {
+    void update_ShouldModifyAndReturnUpdatedTrackDTO_WhenFound() {
         Long id = 1L;
         TrackDTO dto = new TrackDTO();
         Track entity = new Track();
@@ -102,7 +103,7 @@ class TrackServiceTest {
     }
 
     @Test
-    void update_ShouldReturnNull_WhenPresenterNotFound() {
+    void update_ShouldReturnNull_WhenTrackNotFound() {
         Long id = 1L;
         TrackDTO dto = new TrackDTO();
 

@@ -29,7 +29,7 @@ class ArtistServiceTest {
     }
 
     @Test
-    void findAll_ShouldReturnListOfAttendeeDTOs() {
+    void findAll_ShouldReturnListOfArtistDTOs() {
         Artist artist = new Artist();
         ArtistDTO artistDTO = new ArtistDTO();
         List<Artist> artists = List.of(artist);
@@ -45,7 +45,7 @@ class ArtistServiceTest {
     }
 
     @Test
-    void findById_ShouldReturnAttendeeDTO_WhenFound() {
+    void findById_ShouldReturnArtistDTO_WhenFound() {
         Long id = 1L;
         Artist artist = new Artist();
         ArtistDTO artistDTO = new ArtistDTO();
@@ -70,7 +70,7 @@ class ArtistServiceTest {
     }
 
     @Test
-    void create_ShouldSaveAndReturnAttendeeDTO() {
+    void create_ShouldSaveAndReturnArtistDTO() {
         ArtistDTO dto = new ArtistDTO();
         Artist entity = new Artist();
 
@@ -85,7 +85,7 @@ class ArtistServiceTest {
     }
 
     @Test
-    void update_ShouldModifyAndReturnUpdatedAttendeeDTO_WhenFound() {
+    void update_ShouldModifyAndReturnUpdatedArtistDTO_WhenFound() {
         Long id = 1L;
         ArtistDTO dto = new ArtistDTO();
         Artist entity = new Artist();
@@ -101,7 +101,7 @@ class ArtistServiceTest {
     }
 
     @Test
-    void update_ShouldReturnNull_WhenAttendeeNotFound() {
+    void update_ShouldReturnNull_WhenArtistNotFound() {
         Long id = 1L;
         ArtistDTO dto = new ArtistDTO();
 
