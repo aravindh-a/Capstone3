@@ -39,23 +39,22 @@ class AlbumCollectionControllerTest {
 
     @BeforeEach
     void setup() throws Exception {
-        baseUrl = "http://localhost:" + port + "/api/sessions";
+        baseUrl = "http://localhost:" + port + "/api/albums";
         try (Connection conn = dataSource.getConnection();
             Statement stmt = conn.createStatement()) {
-            stmt.executeUpdate("DELETE FROM conference_session_attendee");
-            stmt.executeUpdate("DELETE FROM conference_session_presenter");
-            stmt.executeUpdate("DELETE FROM conference_session");
-            stmt.executeUpdate("DELETE FROM attendee");
-            stmt.executeUpdate("DELETE FROM presenter");
+            stmt.executeUpdate("DELETE FROM album_collection_artist");
+            stmt.executeUpdate("DELETE FROM album_collection_track");
+            stmt.executeUpdate("DELETE FROM album_collection");
+            stmt.executeUpdate("DELETE FROM artist");
+            stmt.executeUpdate("DELETE FROM track");
         }
     }
 
     @Test
     void createAndGetSession() {
         AlbumCollectionDTO dto = new AlbumCollectionDTO();
-        dto.setTitle("Spring Boot Deep Dive");
-        dto.setStartTime(LocalDateTime.now());
-        dto.setEndTime(LocalDateTime.now().plusHours(6));
+        dto.setAlbumName("Album1");
+        dto.setGenre("Genre1");
 
         ResponseEntity<AlbumCollectionDTO> createResponse = restTemplate.postForEntity(baseUrl, dto, AlbumCollectionDTO.class);
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -65,75 +64,74 @@ class AlbumCollectionControllerTest {
 
         ResponseEntity<AlbumCollectionDTO> getResponse = restTemplate.getForEntity(baseUrl + "/" + created.getId(), AlbumCollectionDTO.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(Objects.requireNonNull(getResponse.getBody()).getTitle()).isEqualTo("Spring Boot Deep Dive");
+        assertThat(Objects.requireNonNull(getResponse.getBody()).getAlbumName()).isEqualTo("Album1");
     }
 
     @Test
     void assignPresenterAndRegisterAttendee() {
         // Create session
         AlbumCollectionDTO session = new AlbumCollectionDTO();
-        session.setTitle("Test Session");
-        session.setStartTime(LocalDateTime.now());
-        session.setEndTime(LocalDateTime.now().plusDays(4));
+        session.setAlbumName("Test Album");
+        session.setGenre("Test Genre1");
+//        session.setEndTime(LocalDateTime.now().plusDays(4));
         session = restTemplate.postForEntity(baseUrl, session, AlbumCollectionDTO.class).getBody();
 
-        // Create attendee
-        ArtistDTO attendee = new ArtistDTO();
-        attendee.setName("Test Attendee");
-        attendee = restTemplate.postForEntity("http://localhost:" + port + "/api/attendees", attendee, ArtistDTO.class).getBody();
+        // Create artist
+        ArtistDTO artist = new ArtistDTO();
+        artist.setArtistName("Test Artist");
+        artist = restTemplate.postForEntity("http://localhost:" + port + "/api/artists", artist, ArtistDTO.class).getBody();
 
-        // Create presenter
-        TrackDTO presenter = new TrackDTO();
-        presenter.setName("Test Presenter");
-        presenter = restTemplate.postForEntity("http://localhost:" + port + "/api/presenters", presenter, TrackDTO.class).getBody();
+        // Create track
+        TrackDTO track = new TrackDTO();
+        track.setTitle("Test track Name");
+        track = restTemplate.postForEntity("http://localhost:" + port + "/api/tracks", track, TrackDTO.class).getBody();
 
-        // Register attendee
+        // Register artist
         assert session != null;
-        assert attendee != null;
+        assert artist != null;
         ResponseEntity<AlbumCollectionDTO> registerResponse = restTemplate.postForEntity(
-                baseUrl + "/" + session.getId() + "/attendees/" + attendee.getId(),
+                baseUrl + "/" + session.getId() + "/tracks/" + artist.getId(),
                 null, AlbumCollectionDTO.class);
 
         assertThat(registerResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(Objects.requireNonNull(registerResponse.getBody()).getAttendees()).hasSize(1);
+        assertThat(Objects.requireNonNull(registerResponse.getBody()).getArtists()).hasSize(1);
 
-        // Assign presenter
-        assert presenter != null;
+        // Assign track
+        assert track != null;
         ResponseEntity<AlbumCollectionDTO> assignResponse = restTemplate.postForEntity(
-                baseUrl + "/" + session.getId() + "/presenters/" + presenter.getId(),
+                baseUrl + "/" + session.getId() + "/tracks/" + track.getId(),
                 null, AlbumCollectionDTO.class);
 
         assertThat(assignResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(Objects.requireNonNull(assignResponse.getBody()).getPresenters()).hasSize(1);
+        assertThat(Objects.requireNonNull(assignResponse.getBody()).getTracks()).hasSize(1);
     }
 
     @Test
     void getSessionsByAttendeeOrPresenter() {
         // Create session
         AlbumCollectionDTO session = new AlbumCollectionDTO();
-        session.setTitle("Query Test");
-        session.setStartTime(LocalDateTime.now());
-        session.setEndTime(LocalDateTime.now().plusHours(8));
+        session.setAlbumName("Test Album Name");
+        session.setGenre("Pop");
         session = restTemplate.postForEntity(baseUrl, session, AlbumCollectionDTO.class).getBody();
 
         // Create and register attendee
-        ArtistDTO attendee = new ArtistDTO();
-        attendee.setName("Query Attendee");
-        attendee = restTemplate.postForEntity("http://localhost:" + port + "/api/attendees", attendee, ArtistDTO.class).getBody();
+        ArtistDTO artist = new ArtistDTO();
+        artist.setArtistName("Test Artist Name");
+        artist = restTemplate.postForEntity("http://localhost:" + port + "/api/artists", artist, ArtistDTO.class).getBody();
         assert session != null;
-        assert attendee != null;
-        restTemplate.postForEntity(baseUrl + "/" + session.getId() + "/attendees/" + attendee.getId(), null, AlbumCollectionDTO.class);
+        assert artist != null;
+        restTemplate.postForEntity(baseUrl + "/" + session.getId() + "/artists/" + artist.getId(), null, AlbumCollectionDTO.class);
 
         // Create and assign presenter
-        TrackDTO presenter = new TrackDTO();
-        presenter.setName("Query Presenter");
-        presenter = restTemplate.postForEntity("http://localhost:" + port + "/api/presenters", presenter, TrackDTO.class).getBody();
-        assert presenter != null;
-        restTemplate.postForEntity(baseUrl + "/" + session.getId() + "/presenters/" + presenter.getId(), null, AlbumCollectionDTO.class);
+        TrackDTO track = new TrackDTO();
+        track.setTitle("Test Track Name");
+        track = restTemplate.postForEntity("http://localhost:" + port + "/api/tracks", track, TrackDTO.class).getBody();
+        assert track != null;
+        restTemplate.postForEntity(baseUrl + "/" + session.getId() + "/tracks/" + track.getId(), null, AlbumCollectionDTO.class);
 
         // Get by attendee
         ResponseEntity<List<AlbumCollectionDTO>> attendeeResponse = restTemplate.exchange(
-                baseUrl + "/attendee/" + attendee.getId(),
+                baseUrl + "/artists/" + artist.getId(),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {});
@@ -143,7 +141,7 @@ class AlbumCollectionControllerTest {
 
         // Get by presenter
         ResponseEntity<List<AlbumCollectionDTO>> presenterResponse = restTemplate.exchange(
-                baseUrl + "/presenter/" + presenter.getId(),
+                baseUrl + "/tracks/" + track.getId(),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {});

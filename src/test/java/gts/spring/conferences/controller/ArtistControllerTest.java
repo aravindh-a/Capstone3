@@ -37,38 +37,38 @@ class ArtistControllerTest {
 
     @BeforeEach
     void setup() throws SQLException {
-        baseUrl = "http://localhost:" + port + "/api/attendees";
+        baseUrl = "http://localhost:" + port + "/api/artists";
 
         // Clean up attendee/session join table if needed
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement()) {
 
             // Clear join table first to avoid FK violations
-            stmt.executeUpdate("DELETE FROM conference_session_attendee");
-            stmt.executeUpdate("DELETE FROM attendee");
+            stmt.executeUpdate("DELETE FROM album_collection_artist");
+            stmt.executeUpdate("DELETE FROM artist");
         }
     }
 
     @Test
     void createAndGetArtist() {
         ArtistDTO dto = new ArtistDTO();
-        dto.setName("Alice Johnson");
+        dto.setArtistName("Alice Johnson");
 
         ResponseEntity<ArtistDTO> createResponse = restTemplate.postForEntity(baseUrl, dto, ArtistDTO.class);
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         ArtistDTO created = createResponse.getBody();
         assertThat(created).isNotNull();
-        assertThat(created.getName()).isEqualTo("Alice Johnson");
+        assertThat(created.getArtistName()).isEqualTo("Alice Johnson");
 
         ResponseEntity<ArtistDTO> getResponse = restTemplate.getForEntity(baseUrl + "/" + created.getId(), ArtistDTO.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(Objects.requireNonNull(getResponse.getBody()).getName()).isEqualTo("Alice Johnson");
+        assertThat(Objects.requireNonNull(getResponse.getBody()).getArtistName()).isEqualTo("Alice Johnson");
     }
 
     @Test
     void getAllArtists_ShouldReturnList() {
         ArtistDTO dto1 = new ArtistDTO();
-        dto1.setName("John Doe");
+        dto1.setArtistName("John Doe");
 
         restTemplate.postForEntity(baseUrl, dto1, ArtistDTO.class);
 
@@ -86,11 +86,11 @@ class ArtistControllerTest {
     @Test
     void updateAttendee_ShouldModifyExisting() {
         ArtistDTO dto = new ArtistDTO();
-        dto.setName("Jane Smith");
+        dto.setArtistName("Jane Smith");
 
         ArtistDTO created = restTemplate.postForEntity(baseUrl, dto, ArtistDTO.class).getBody();
         assert created != null;
-        created.setName("Jane Doe");
+        created.setArtistName("Jane Doe");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -104,13 +104,13 @@ class ArtistControllerTest {
         );
 
         assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(Objects.requireNonNull(updateResponse.getBody()).getName()).isEqualTo("Jane Doe");
+        assertThat(Objects.requireNonNull(updateResponse.getBody()).getArtistName()).isEqualTo("Jane Doe");
     }
 
     @Test
     void deleteAttendee_ShouldReturnNoContent() {
         ArtistDTO dto = new ArtistDTO();
-        dto.setName("Bob Brown");
+        dto.setArtistName("Bob Brown");
 
         ArtistDTO created = restTemplate.postForEntity(baseUrl, dto, ArtistDTO.class).getBody();
 

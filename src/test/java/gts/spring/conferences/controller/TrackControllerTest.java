@@ -36,38 +36,38 @@ class TrackControllerTest {
 
     @BeforeEach
     void setup() throws Exception {
-        baseUrl = "http://localhost:" + port + "/api/presenters";
+        baseUrl = "http://localhost:" + port + "/api/tracks";
 
         // Clean up presenter/session join table if needed
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement()) {
 
             // Clear join table first to avoid FK violations
-            stmt.executeUpdate("DELETE FROM conference_session_presenter");
-            stmt.executeUpdate("DELETE FROM presenter");
+            stmt.executeUpdate("DELETE FROM album_collection_track");
+            stmt.executeUpdate("DELETE FROM track");
         }
     }
 
     @Test
     void createAndGetPresenter() {
         TrackDTO dto = new TrackDTO();
-        dto.setName("Ada Lovelace");
+        dto.setTitle("Test Title");
 
         ResponseEntity<TrackDTO> createResponse = restTemplate.postForEntity(baseUrl, dto, TrackDTO.class);
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         TrackDTO created = createResponse.getBody();
         assertThat(created).isNotNull();
-        assertThat(created.getName()).isEqualTo("Ada Lovelace");
+        assertThat(created.getTitle()).isEqualTo("Test Title");
 
         ResponseEntity<TrackDTO> getResponse = restTemplate.getForEntity(baseUrl + "/" + created.getId(), TrackDTO.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(Objects.requireNonNull(getResponse.getBody()).getName()).isEqualTo("Ada Lovelace");
+        assertThat(Objects.requireNonNull(getResponse.getBody()).getTitle()).isEqualTo("Test Title");
     }
 
     @Test
     void getAllPresenters_ShouldReturnList() {
         TrackDTO dto = new TrackDTO();
-        dto.setName("Grace Hopper");
+        dto.setTitle("Test Title2");
         restTemplate.postForEntity(baseUrl, dto, TrackDTO.class);
 
         ResponseEntity<List<TrackDTO>> response = restTemplate.exchange(
@@ -84,11 +84,11 @@ class TrackControllerTest {
     @Test
     void updatePresenter_ShouldModifyExisting() {
         TrackDTO dto = new TrackDTO();
-        dto.setName("Katherine Johnson");
+        dto.setTitle("Title 3");
         TrackDTO created = restTemplate.postForEntity(baseUrl, dto, TrackDTO.class).getBody();
 
         assert created != null;
-        created.setName("Katherine J.");
+        created.setTitle("3rd Title");
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -102,13 +102,13 @@ class TrackControllerTest {
         );
 
         assertThat(updateResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(Objects.requireNonNull(updateResponse.getBody()).getName()).isEqualTo("Katherine J.");
+        assertThat(Objects.requireNonNull(updateResponse.getBody()).getTitle()).isEqualTo("3rd Title");
     }
 
     @Test
     void deletePresenter_ShouldReturnNoContent() {
         TrackDTO dto = new TrackDTO();
-        dto.setName("Alan Turing");
+        dto.setTitle("Moonlight Sonata");
 
         TrackDTO created = restTemplate.postForEntity(baseUrl, dto, TrackDTO.class).getBody();
 
