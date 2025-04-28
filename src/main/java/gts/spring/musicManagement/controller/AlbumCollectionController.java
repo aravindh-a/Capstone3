@@ -13,70 +13,70 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/albums")
-@Tag(name = "Albums", description = "Endpoints for managing Conference Sessions")
+@Tag(name = "Albums", description = "Endpoints for managing album")
 @RequiredArgsConstructor
 public class AlbumCollectionController {
 
     private final AlbumCollectionService albumCollectionService;
 
-    @Operation(summary = "Get all conference sessions")
+    @Operation(summary = "Get all album")
     @GetMapping
     public ResponseEntity<List<AlbumCollectionDTO>> getAllAlbums() {
         return ResponseEntity.ok(albumCollectionService.findAll());
     }
 
-    @Operation(summary = "Get a conference session by ID")
+    @Operation(summary = "Get a album by ID")
     @GetMapping("/{id}")
     public ResponseEntity<AlbumCollectionDTO> getAlbumById(@PathVariable Long id) {
-        var session = albumCollectionService.findById(id);
-        return session != null ? ResponseEntity.ok(session) : ResponseEntity.notFound().build();
+        var album = albumCollectionService.findById(id);
+        return album != null ? ResponseEntity.ok(album) : ResponseEntity.notFound().build();
     }
 
-    @Operation(summary = "Create a new conference session")
+    @Operation(summary = "Create a album")
     @PostMapping
-    public ResponseEntity<AlbumCollectionDTO> createAlbum(@Valid @RequestBody AlbumCollectionDTO sessionDTO) {
-        return ResponseEntity.status(201).body(albumCollectionService.create(sessionDTO));
+    public ResponseEntity<AlbumCollectionDTO> createAlbum(@Valid @RequestBody AlbumCollectionDTO albumDTO) {
+        return ResponseEntity.status(201).body(albumCollectionService.create(albumDTO));
     }
 
-    @Operation(summary = "Update an existing conference session by ID (PUT)")
+    @Operation(summary = "Update an existing album by ID (PUT)")
     @PutMapping("/{id}")
     public ResponseEntity<AlbumCollectionDTO> updateAlbum(@PathVariable Long id,
-                                                            @Valid @RequestBody AlbumCollectionDTO sessionDTO) {
-        var session = albumCollectionService.findById(id);
-        return session != null ? ResponseEntity.ok(albumCollectionService.update(id, sessionDTO)) : ResponseEntity.notFound().build();
+                                                            @Valid @RequestBody AlbumCollectionDTO albumDTO) {
+        var album = albumCollectionService.findById(id);
+        return album != null ? ResponseEntity.ok(albumCollectionService.update(id, albumDTO)) : ResponseEntity.notFound().build();
     }
 
-    @Operation(summary = "Delete an existing conference session by ID")
+    @Operation(summary = "Delete an existing album by ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAlbum(@PathVariable Long id) {
         albumCollectionService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Register a new attendee in an existing conference session")
-    @PostMapping("/{sessionId}/attendees/{artistId}")
-    public ResponseEntity<AlbumCollectionDTO> registerArtist(@PathVariable Long sessionId, @PathVariable Long artistId) {
-        var session = albumCollectionService.registerArtist(sessionId, artistId);
-        return session != null ? ResponseEntity.ok(session)
+    @Operation(summary = "Register a new artist in an existing album")
+    @PostMapping("/{albumId}/artists/{artistId}")
+    public ResponseEntity<AlbumCollectionDTO> registerArtist(@PathVariable Long albumId, @PathVariable Long artistId) {
+        var album = albumCollectionService.registerArtist(albumId, artistId);
+        return album != null ? ResponseEntity.ok(album)
                 : ResponseEntity.notFound().build();
     }
 
-    @Operation(summary = "Assign a new presenter to an existing conference session")
-    @PostMapping("/{sessionId}/presenters/{trackId}")
-    public ResponseEntity<AlbumCollectionDTO> registerTrack(@PathVariable Long sessionId, @PathVariable Long trackId) {
-        var session = albumCollectionService.registerTrack(sessionId, trackId);
-        return session != null ? ResponseEntity.ok(session)
+    @Operation(summary = "Assign a new track to an existing album")
+    @PostMapping("/{albumId}/track/{trackId}")
+    public ResponseEntity<AlbumCollectionDTO> registerTrack(@PathVariable Long albumId, @PathVariable Long trackId) {
+        var album = albumCollectionService.registerTrack(albumId, trackId);
+        return album != null ? ResponseEntity.ok(album)
                 : ResponseEntity.notFound().build();
     }
 
-    @Operation(summary = "Get all conference sessions in which the given attendee is registered")
-    @GetMapping("/attendee/{artistId}")
+    @Operation(summary = "Get all album in which the given artist is registered")
+    @GetMapping("/artist/{artistId}")
     public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByArtist(@PathVariable Long artistId) {
         return ResponseEntity.ok(albumCollectionService.findByArtistId(artistId));
     }
 
-    @Operation(summary = "Get all conference sessions to which the given presenter is assigned")
-    @GetMapping("/presenter/{trackId}")
+    @Operation(summary = "Get all album to which the given track is Registered")
+    @GetMapping("/track/{trackId}")
     public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByTrack(@PathVariable Long trackId) {
         return ResponseEntity.ok(albumCollectionService.findByTrackId(trackId));
     }

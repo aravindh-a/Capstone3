@@ -13,40 +13,40 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/tracks")
-@Tag(name = "Tracks", description = "Endpoints for managing Presenters")
+@Tag(name = "Tracks", description = "Endpoints for managing Tracks")
 @RequiredArgsConstructor
 public class TrackController {
 
     private final TrackService trackService;
 
-    @Operation(summary = "Get all presenters")
+    @Operation(summary = "Get all tracks")
     @GetMapping
     public ResponseEntity<List<TrackDTO>> getAllTracks() {
         return ResponseEntity.ok(trackService.findAll());
     }
 
-    @Operation(summary = "Get a presenter by ID")
+    @Operation(summary = "Get a track by ID")
     @GetMapping("/{id}")
     public ResponseEntity<TrackDTO> getTrack(@PathVariable Long id) {
-        var presenter = trackService.findById(id);
-        return presenter != null ? ResponseEntity.ok(presenter) : ResponseEntity.notFound().build();
+        var track = trackService.findById(id);
+        return track != null ? ResponseEntity.ok(track) : ResponseEntity.notFound().build();
     }
 
-    @Operation(summary = "Create a new presenter")
+    @Operation(summary = "Create a new track")
     @PostMapping
     public ResponseEntity<TrackDTO> createTrack(@Valid @RequestBody TrackDTO trackDTO) {
         return ResponseEntity.status(201).body(trackService.create(trackDTO));
     }
 
-    @Operation(summary = "Update an existing presenter by ID (PUT)")
+    @Operation(summary = "Update an existing track by ID (PUT)")
     @PutMapping("/{id}")
     public ResponseEntity<TrackDTO> updateTrack(@PathVariable Long id,
                                                     @Valid @RequestBody TrackDTO trackDTO) {
-        var presenter = trackService.findById(id);
-        return presenter != null ? ResponseEntity.ok(trackService.update(id, trackDTO)) : ResponseEntity.notFound().build();
+        var track = trackService.findById(id);
+        return track != null ? ResponseEntity.ok(trackService.update(id, trackDTO)) : ResponseEntity.notFound().build();
     }
 
-    @Operation(summary = "Delete an existing presenter by ID")
+    @Operation(summary = "Delete an existing track by ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTrack(@PathVariable Long id) {
         trackService.delete(id);
