@@ -62,7 +62,7 @@ public class AlbumCollectionController {
     }
 
     @Operation(summary = "Assign a new track to an existing album")
-    @PostMapping("/{albumId}/track/{trackId}")
+    @PostMapping("/{albumId}/tracks/{trackId}")
     public ResponseEntity<AlbumCollectionDTO> registerTrack(@PathVariable Long albumId, @PathVariable Long trackId) {
         var album = albumCollectionService.registerTrack(albumId, trackId);
         return album != null ? ResponseEntity.ok(album)
@@ -70,13 +70,13 @@ public class AlbumCollectionController {
     }
 
     @Operation(summary = "Get all album in which the given artist is registered")
-    @GetMapping("/artist/{artistId}")
+    @GetMapping("/artists/{artistId}")
     public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByArtist(@PathVariable Long artistId) {
         return ResponseEntity.ok(albumCollectionService.findByArtistId(artistId));
     }
 
     @Operation(summary = "Get all album to which the given track is Registered")
-    @GetMapping("/track/{trackId}")
+    @GetMapping("/tracks/{trackId}")
     public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByTrack(@PathVariable Long trackId) {
         return ResponseEntity.ok(albumCollectionService.findByTrackId(trackId));
     }

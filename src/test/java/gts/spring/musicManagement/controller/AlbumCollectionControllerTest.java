@@ -50,7 +50,7 @@ class AlbumCollectionControllerTest {
     }
 
     @Test
-    void createAndGetSession() {
+    void createAndGetAlbumCollection() {
         AlbumCollectionDTO dto = new AlbumCollectionDTO();
         dto.setAlbumName("Album1");
         dto.setGenre("Genre1");
@@ -67,29 +67,30 @@ class AlbumCollectionControllerTest {
     }
 
     @Test
-    void assignPresenterAndRegisterAttendee() {
-        // Create session
-        AlbumCollectionDTO session = new AlbumCollectionDTO();
-        session.setAlbumName("Test Album");
-        session.setGenre("Test Genre1");
-//        session.setEndTime(LocalDateTime.now().plusDays(4));
-        session = restTemplate.postForEntity(baseUrl, session, AlbumCollectionDTO.class).getBody();
+    void registerTrackAndRegisterArtist() {
+        // Create Album
+        AlbumCollectionDTO albumCollectionDTO = new AlbumCollectionDTO();
+        albumCollectionDTO.setAlbumName("Test Album");
+        albumCollectionDTO.setGenre("Test Genre1");
+        albumCollectionDTO = restTemplate.postForEntity(baseUrl, albumCollectionDTO, AlbumCollectionDTO.class).getBody();
 
         // Create artist
         ArtistDTO artist = new ArtistDTO();
         artist.setArtistName("Test Artist");
+        artist.setCountry("Test Country");
         artist = restTemplate.postForEntity("http://localhost:" + port + "/api/artists", artist, ArtistDTO.class).getBody();
 
         // Create track
         TrackDTO track = new TrackDTO();
         track.setTitle("Test track Name");
+        track.setDuration(2.06);
         track = restTemplate.postForEntity("http://localhost:" + port + "/api/tracks", track, TrackDTO.class).getBody();
 
         // Register artist
-        assert session != null;
+        assert albumCollectionDTO != null;
         assert artist != null;
         ResponseEntity<AlbumCollectionDTO> registerResponse = restTemplate.postForEntity(
-                baseUrl + "/" + session.getId() + "/tracks/" + artist.getId(),
+                baseUrl + "/" + albumCollectionDTO.getId() + "/artists/" + artist.getId(),
                 null, AlbumCollectionDTO.class);
 
         assertThat(registerResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -98,7 +99,7 @@ class AlbumCollectionControllerTest {
         // Assign track
         assert track != null;
         ResponseEntity<AlbumCollectionDTO> assignResponse = restTemplate.postForEntity(
-                baseUrl + "/" + session.getId() + "/tracks/" + track.getId(),
+                baseUrl + "/" + albumCollectionDTO.getId() + "/tracks/" + track.getId(),
                 null, AlbumCollectionDTO.class);
 
         assertThat(assignResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -106,46 +107,48 @@ class AlbumCollectionControllerTest {
     }
 
     @Test
-    void getSessionsByAttendeeOrPresenter() {
-        // Create session
-        AlbumCollectionDTO session = new AlbumCollectionDTO();
-        session.setAlbumName("Test Album Name");
-        session.setGenre("Pop");
-        session = restTemplate.postForEntity(baseUrl, session, AlbumCollectionDTO.class).getBody();
+    void getAlbumsByArtistOrTrack() {
+        // Create album
+        AlbumCollectionDTO albumCollectionDTO = new AlbumCollectionDTO();
+        albumCollectionDTO.setAlbumName("Test Album Name");
+        albumCollectionDTO.setGenre("Pop");
+        albumCollectionDTO = restTemplate.postForEntity(baseUrl, albumCollectionDTO, AlbumCollectionDTO.class).getBody();
 
-        // Create and register attendee
+        // Create and register Artist
         ArtistDTO artist = new ArtistDTO();
         artist.setArtistName("Test Artist Name");
+        artist.setCountry("Test Country");
         artist = restTemplate.postForEntity("http://localhost:" + port + "/api/artists", artist, ArtistDTO.class).getBody();
-        assert session != null;
+        assert albumCollectionDTO != null;
         assert artist != null;
-        restTemplate.postForEntity(baseUrl + "/" + session.getId() + "/artists/" + artist.getId(), null, AlbumCollectionDTO.class);
+        restTemplate.postForEntity(baseUrl + "/" + albumCollectionDTO.getId() + "/artists/" + artist.getId(), null, AlbumCollectionDTO.class);
 
-        // Create and assign presenter
+        // Create and assign Track
         TrackDTO track = new TrackDTO();
         track.setTitle("Test Track Name");
+        track.setDuration(2.06);
         track = restTemplate.postForEntity("http://localhost:" + port + "/api/tracks", track, TrackDTO.class).getBody();
         assert track != null;
-        restTemplate.postForEntity(baseUrl + "/" + session.getId() + "/tracks/" + track.getId(), null, AlbumCollectionDTO.class);
+        restTemplate.postForEntity(baseUrl + "/" + albumCollectionDTO.getId() + "/tracks/" + track.getId(), null, AlbumCollectionDTO.class);
 
-        // Get by attendee
-        ResponseEntity<List<AlbumCollectionDTO>> attendeeResponse = restTemplate.exchange(
+        // Get by Artist
+        ResponseEntity<List<AlbumCollectionDTO>> artistResponse = restTemplate.exchange(
                 baseUrl + "/artists/" + artist.getId(),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {});
 
-        assertThat(attendeeResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(attendeeResponse.getBody()).hasSize(1);
+        assertThat(artistResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(artistResponse.getBody()).hasSize(1);
 
-        // Get by presenter
-        ResponseEntity<List<AlbumCollectionDTO>> presenterResponse = restTemplate.exchange(
+        // Get by track
+        ResponseEntity<List<AlbumCollectionDTO>> trackResponse = restTemplate.exchange(
                 baseUrl + "/tracks/" + track.getId(),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<>() {});
 
-        assertThat(presenterResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(presenterResponse.getBody()).hasSize(1);
+        assertThat(trackResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(trackResponse.getBody()).hasSize(1);
     }
 }

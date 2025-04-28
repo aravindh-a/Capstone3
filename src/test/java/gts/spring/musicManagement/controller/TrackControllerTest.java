@@ -38,7 +38,7 @@ class TrackControllerTest {
     void setup() throws Exception {
         baseUrl = "http://localhost:" + port + "/api/tracks";
 
-        // Clean up presenter/session join table if needed
+        // Clean up track/album join table if needed
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement()) {
 
@@ -49,7 +49,7 @@ class TrackControllerTest {
     }
 
     @Test
-    void createAndGetPresenter() {
+    void createAndGetTrack() {
         TrackDTO dto = new TrackDTO();
         dto.setTitle("Test Title");
         dto.setDuration(4.2);
@@ -67,7 +67,7 @@ class TrackControllerTest {
     }
 
     @Test
-    void getAllPresenters_ShouldReturnList() {
+    void getAllTracks_ShouldReturnList() {
         TrackDTO dto = new TrackDTO();
         dto.setTitle("Test Title2");
         dto.setDuration(4.2);
@@ -85,7 +85,7 @@ class TrackControllerTest {
     }
 
     @Test
-    void updatePresenter_ShouldModifyExisting() {
+    void updateTrack_ShouldModifyExisting() {
         TrackDTO dto = new TrackDTO();
         dto.setTitle("Title 3");
         dto.setDuration(4.2);
@@ -111,7 +111,7 @@ class TrackControllerTest {
     }
 
     @Test
-    void deletePresenter_ShouldReturnNoContent() {
+    void deleteTrack_ShouldReturnNoContent() {
         TrackDTO dto = new TrackDTO();
         dto.setTitle("Moonlight Sonata");
         dto.setDuration(4.2);

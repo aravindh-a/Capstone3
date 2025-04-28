@@ -39,7 +39,7 @@ class ArtistControllerTest {
     void setup() throws SQLException {
         baseUrl = "http://localhost:" + port + "/api/artists";
 
-        // Clean up attendee/session join table if needed
+        // Clean up Artist/album join table if needed
         try (Connection conn = dataSource.getConnection();
              Statement stmt = conn.createStatement()) {
 
@@ -86,7 +86,7 @@ class ArtistControllerTest {
     }
 
     @Test
-    void updateAttendee_ShouldModifyExisting() {
+    void updateArtist_ShouldModifyExisting() {
         ArtistDTO dto = new ArtistDTO();
         dto.setArtistName("Jane Smith");
         dto.setCountry("India");
@@ -113,7 +113,7 @@ class ArtistControllerTest {
     }
 
     @Test
-    void deleteAttendee_ShouldReturnNoContent() {
+    void deleteArtist_ShouldReturnNoContent() {
         ArtistDTO dto = new ArtistDTO();
         dto.setArtistName("Bob Brown");
         dto.setCountry("India");

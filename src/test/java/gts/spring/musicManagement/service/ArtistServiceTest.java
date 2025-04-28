@@ -7,6 +7,8 @@ import gts.spring.musicManagement.repository.ArtistRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.data.domain.Sort;
+
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,16 +34,16 @@ class ArtistServiceTest {
     void findAll_ShouldReturnListOfArtistDTOs() {
         Artist artist = new Artist();
         ArtistDTO artistDTO = new ArtistDTO();
-        List<Artist> artists = List.of(artist);
-        List<ArtistDTO> expected = List.of(artistDTO);
+        List<Artist> artists = new ArrayList<>();
+        List<ArtistDTO> expected = new ArrayList<>();
 
-        when(artistRepository.findAllByOrderByIdAsc()).thenReturn(artists);
+        when(artistRepository.findAll()).thenReturn(artists);
         when(artistMapper.toDTO(artist)).thenReturn(artistDTO);
 
         List<ArtistDTO> result = artistService.findAll();
 
         assertThat(result).isEqualTo(expected);
-        verify(artistRepository).findAllByOrderByIdAsc();
+        verify(artistRepository).findAll(Sort.by(Sort.Direction.ASC, "id"));
     }
 
     @Test
