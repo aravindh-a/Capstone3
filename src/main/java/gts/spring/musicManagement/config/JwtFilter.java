@@ -41,7 +41,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userRepository.findByUsername(username)
-                    .map(user -> User.withUsername(user.getUsername()).password(user.getPassword()).authorities("USER").build())
+                    .map(user -> User.withUsername(user.getUsername())
+                            .password(user.getPassword())
+                            .authorities(
+                                    user.getRoles().stream()
+                                            .map(role -> "ROLE_" + role.getName().toUpperCase())
+                                            .toArray(String[]::new)
+                            )
+                            .build())
                     .orElse(null);
 
             if (userDetails != null && jwtUtil.validateToken(token)) {
@@ -56,3 +63,4 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 }
+

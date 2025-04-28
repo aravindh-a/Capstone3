@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,12 +35,14 @@ public class ArtistController {
 
     @Operation(summary = "Create a new artist")
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ArtistDTO> createArtist(@Valid @RequestBody ArtistDTO artistDTO) {
         return ResponseEntity.status(201).body(artistService.create(artistDTO));
     }
 
     @Operation(summary = "Update an existing artist by ID (PUT)")
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ArtistDTO> updateArtist(@PathVariable Long id,
                                                     @Valid @RequestBody ArtistDTO artistDTO) {
         var artist = artistService.findById(id);
@@ -48,6 +51,7 @@ public class ArtistController {
 
     @Operation(summary = "Delete an existing artist by ID")
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteArtist(@PathVariable Long id) {
         artistService.delete(id);
         return ResponseEntity.noContent().build();

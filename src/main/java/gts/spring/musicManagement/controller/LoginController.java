@@ -34,6 +34,7 @@ public class  LoginController {
         User user = User.builder()
                 .username(request.username())
                 .password(passwordEncoder.encode(request.password()))
+                .roles(request.roles())
                 .build();
         userRepository.save(user);
         return ResponseEntity.ok("User registered successfully");
