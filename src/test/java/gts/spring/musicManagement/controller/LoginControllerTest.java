@@ -45,18 +45,24 @@ class LoginControllerTest {
                 .getResponse()
                 .getContentAsString();
 
-        // Extract the token
         userToken = objectMapper.readTree(response).get("token").asText();
     }
 
-//    @Test
-//    void login() throws Exception {
-//        mockMvc.perform(post("/api/auth/register")
-////                        .header("Authorization", "Bearer " + userToken)
-//        .contentType(MediaType.APPLICATION_JSON)
-//        .content("{\"username\":\"admin123\",\"password\":\"password123\",\"roles\":1}"))
-//                .andExpect(status().isCreated());
-//    }
+    @Test
+    void login() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("{\n" +
+                "  \"username\": \"test-login2\",\n" +
+                "  \"password\": \"123456234\",\n" +
+                "  \"roles\": [\n" +
+                "    {\n" +
+                "      \"id\": 2\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}"))
+                .andExpect(status().isOk());
+    }
 
     @Test
     void userShouldNotAccessAdminOnlyEndpoint() throws Exception {
