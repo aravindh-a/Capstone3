@@ -27,13 +27,19 @@ public class TestDataInitializer {
             user.setUsername("testuser");
             user.setPassword(new BCryptPasswordEncoder().encode("password"));
             user.setRoles(Set.of(userRole));
-            userRepository.save(user);
+            if (userRepository.findByUsername("testuser").isPresent()) {
+                return;
+            }
+            else userRepository.save(user);
 
             User admin = new User();
             admin.setUsername("testadmin");
             admin.setPassword(new BCryptPasswordEncoder().encode("adminpassword"));
             admin.setRoles(Set.of(userRole, adminRole));
-            userRepository.save(admin);
+            if (userRepository.findByUsername("testadmin").isPresent()) {
+                return;
+            }
+            else userRepository.save(user);
         };
     }
 }

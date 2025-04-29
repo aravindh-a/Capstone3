@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-class SecurityIntegrationTest {
+class LoginControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,10 +49,19 @@ class SecurityIntegrationTest {
         userToken = objectMapper.readTree(response).get("token").asText();
     }
 
+//    @Test
+//    void login() throws Exception {
+//        mockMvc.perform(post("/api/auth/register")
+////                        .header("Authorization", "Bearer " + userToken)
+//        .contentType(MediaType.APPLICATION_JSON)
+//        .content("{\"username\":\"admin123\",\"password\":\"password123\",\"roles\":1}"))
+//                .andExpect(status().isCreated());
+//    }
+
     @Test
     void userShouldNotAccessAdminOnlyEndpoint() throws Exception {
-        // Attempt to call an ADMIN-protected endpoint
-        mockMvc.perform(post("/api/tracks") // Assuming /api/track requires ADMIN
+
+        mockMvc.perform(post("/api/tracks")
                         .header("Authorization", "Bearer " + userToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"title\": \"Test Course\",  \"duration\": 1.5}"))
