@@ -15,6 +15,7 @@ import java.util.List;
 @RequestMapping("/api/albums")
 @Tag(name = "Albums", description = "Endpoints for managing album")
 @RequiredArgsConstructor
+@CrossOrigin(maxAge = 3600)
 public class AlbumCollectionController {
 
     private final AlbumCollectionService albumCollectionService;
@@ -41,7 +42,7 @@ public class AlbumCollectionController {
     @Operation(summary = "Update an existing album by ID (PUT)")
     @PutMapping("/{id}")
     public ResponseEntity<AlbumCollectionDTO> updateAlbum(@PathVariable Long id,
-                                                            @Valid @RequestBody AlbumCollectionDTO albumDTO) {
+                                                          @Valid @RequestBody AlbumCollectionDTO albumDTO) {
         var album = albumCollectionService.findById(id);
         return album != null ? ResponseEntity.ok(albumCollectionService.update(id, albumDTO)) : ResponseEntity.notFound().build();
     }
@@ -70,7 +71,7 @@ public class AlbumCollectionController {
     }
 
     @Operation(summary = "Get all album in which the given artist is registered")
-    @GetMapping("/artists/{artistId}")
+    @GetMapping("/{artistId}/artists")
     public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByArtist(@PathVariable Long artistId) {
         return ResponseEntity.ok(albumCollectionService.findByArtistId(artistId));
     }
@@ -80,4 +81,7 @@ public class AlbumCollectionController {
     public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByTrack(@PathVariable Long trackId) {
         return ResponseEntity.ok(albumCollectionService.findByTrackId(trackId));
     }
+
+
+
 }

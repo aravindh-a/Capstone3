@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/api/artists")
 @Tag(name = "Artists", description = "Endpoints for managing Artists")
 @RequiredArgsConstructor
+@CrossOrigin(maxAge = 3600)
 public class ArtistController {
 
     private final ArtistService artistService;
@@ -35,14 +36,14 @@ public class ArtistController {
 
     @Operation(summary = "Create a new artist")
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ArtistDTO> createArtist(@Valid @RequestBody ArtistDTO artistDTO) {
         return ResponseEntity.status(201).body(artistService.create(artistDTO));
     }
 
     @Operation(summary = "Update an existing artist by ID (PUT)")
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ArtistDTO> updateArtist(@PathVariable Long id,
                                                     @Valid @RequestBody ArtistDTO artistDTO) {
         var artist = artistService.findById(id);
@@ -51,7 +52,7 @@ public class ArtistController {
 
     @Operation(summary = "Delete an existing artist by ID")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteArtist(@PathVariable Long id) {
         artistService.delete(id);
         return ResponseEntity.noContent().build();
