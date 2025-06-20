@@ -9,20 +9,23 @@ import gts.spring.musicManagement.repository.ArtistRepository;
 import gts.spring.musicManagement.repository.AlbumCollectionRepository;
 import gts.spring.musicManagement.repository.TrackRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AlbumCollectionService  {
 
-    private final AlbumCollectionRepository albumCollectionRepository;
+
     private final ArtistRepository artistRepository;
     private final TrackRepository trackRepository;
     private final AlbumCollectionMapper albumCollectionMapper;
+    private final AlbumCollectionRepository albumCollectionRepository;
 
     public List<AlbumCollectionDTO> findAll() {
         return albumCollectionRepository.findAllByOrderByIdAsc()
@@ -100,4 +103,6 @@ public class AlbumCollectionService  {
                 .map(albumCollectionMapper::toDTO)
                 .collect(Collectors.toList());
     }
+
+
 }

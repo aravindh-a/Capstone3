@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,10 +15,12 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class AlbumCollection extends BaseEntity {
+public class AlbumCollection extends BaseEntity  {
 
     private String albumName;
-    private String genre;
+    private GENRE genre;
+    private LocalDate albumReleaseDate;
+
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(

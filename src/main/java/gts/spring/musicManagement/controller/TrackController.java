@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/api/tracks")
 @Tag(name = "Tracks", description = "Endpoints for managing Tracks")
 @RequiredArgsConstructor
+@CrossOrigin(maxAge = 3600)
 public class TrackController {
 
     private final TrackService trackService;
@@ -35,7 +36,7 @@ public class TrackController {
 
     @Operation(summary = "Create a new track")
     @PostMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<TrackDTO> createTrack(@Valid @RequestBody TrackDTO trackDTO) {
         return ResponseEntity.status(201).body(trackService.create(trackDTO));
     }
