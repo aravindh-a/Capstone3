@@ -27,11 +27,21 @@ public class ArtistDTO extends BaseEntityDTO {
     @NotBlank
     private String lastName;
 
-
-
-
     @Schema(description = "Country of the artist", example = "India")
     @NotBlank
     private String country;
+
+    @Schema(description = "Country of the artist", example = "India")
+    @NotBlank
+    private String bio;
+
+    @Schema(description = "artist Date of birth",example = "2025-04-01")
+    @NotNull
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate birthDate;
+
+
+
 
 }

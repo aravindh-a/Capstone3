@@ -75,6 +75,8 @@ public class AlbumCollectionService  {
         return albumCollectionMapper.toDTO(albumCollectionRepository.save(session));
     }
 
+
+
     @Transactional
     public AlbumCollectionDTO registerTrack(Long sessionId, Long trackId) {
         AlbumCollection session = albumCollectionRepository.findById(sessionId)

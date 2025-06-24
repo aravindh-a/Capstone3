@@ -38,8 +38,12 @@ public class TrackDTO extends BaseEntityDTO {
     @JsonSerialize(using = LocalDateSerializer.class)
     private LocalDate releaseDate;
 
-    @Schema(description = "Track Genre",example = "POP,ROCK,JAZZ,BLUES,HIPHOP")
-    @NotNull
-    private GENRE genre;
+    @Schema(description = " Track Language", example = "English")
+    @NotBlank
+    private String language;
+
+    @Schema(description = " Track producer Name", example = "AR Studio")
+    @NotBlank
+    private String producer;
 
 }

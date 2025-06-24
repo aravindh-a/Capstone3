@@ -71,7 +71,7 @@ public class AlbumCollectionController {
     }
 
     @Operation(summary = "Get all album in which the given artist is registered")
-    @GetMapping("/artists/{artistId}")
+    @GetMapping("/{artistId}/artists")
     public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByArtist(@PathVariable Long artistId) {
         return ResponseEntity.ok(albumCollectionService.findByArtistId(artistId));
     }
@@ -81,4 +81,7 @@ public class AlbumCollectionController {
     public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByTrack(@PathVariable Long trackId) {
         return ResponseEntity.ok(albumCollectionService.findByTrackId(trackId));
     }
+
+
+
 }

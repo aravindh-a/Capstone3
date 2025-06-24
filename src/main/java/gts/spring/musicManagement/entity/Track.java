@@ -21,7 +21,8 @@ public class Track extends BaseEntity {
     private String title;
     private double duration;
     private LocalDate releaseDate;
-    private GENRE genre;
+    private String language;
+    private String producer;
 
 
     @ManyToMany(mappedBy = "tracks", cascade = {CascadeType.PERSIST, CascadeType.MERGE})

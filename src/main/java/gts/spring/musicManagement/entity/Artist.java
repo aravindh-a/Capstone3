@@ -22,6 +22,8 @@ public class Artist extends BaseEntity {
     private String firstName;
     private String lastName;
     private String country;
+    private String bio;
+    private LocalDate birthDate;
 
     @ManyToMany(mappedBy = "artists", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<AlbumCollection> albumCollections = new HashSet<>();

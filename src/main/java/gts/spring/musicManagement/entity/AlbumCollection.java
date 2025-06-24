@@ -3,8 +3,6 @@ package gts.spring.musicManagement.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,8 +17,9 @@ public class AlbumCollection extends BaseEntity  {
 
     private String albumName;
     private GENRE genre;
-    private LocalDate albumReleaseDate;
-
+    private String format;
+    private String description;
+    private Number totalTracks;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
