@@ -61,6 +61,14 @@ public class AlbumCollectionController {
         return album != null ? ResponseEntity.ok(album)
                 : ResponseEntity.notFound().build();
     }
+    @Operation(summary = "Remove an artist from an existing album")
+    @DeleteMapping("/{albumId}/artists/{artistId}")
+    public ResponseEntity<Void> removeArtist(@PathVariable Long albumId, @PathVariable Long artistId) {
+        var album = albumCollectionService.DeregisterArtist(albumId, artistId);
+        return album != null ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+
+    }
+
 
     @Operation(summary = "Assign a new track to an existing album")
     @PostMapping("/{albumId}/tracks/{trackId}")
@@ -70,8 +78,15 @@ public class AlbumCollectionController {
                 : ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "Remove a track from an existing album")
+    @DeleteMapping("/{albumId}/tracks/{trackId}")
+    public ResponseEntity<Void> removeTrack(@PathVariable Long albumId, @PathVariable Long trackId) {
+        var album = albumCollectionService.DeregisterTrack(albumId, trackId);
+        return album != null ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+    }
+
     @Operation(summary = "Get all album in which the given artist is registered")
-    @GetMapping("/{artistId}/artists")
+    @GetMapping("/artists/{artistId}")
     public ResponseEntity<List<AlbumCollectionDTO>> getAlbumByArtist(@PathVariable Long artistId) {
         return ResponseEntity.ok(albumCollectionService.findByArtistId(artistId));
     }

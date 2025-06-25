@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @CrossOrigin(maxAge = 3600)
 public class TrackController {
-
     private final TrackService trackService;
 
     @Operation(summary = "Get all tracks")

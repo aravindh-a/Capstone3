@@ -75,6 +75,19 @@ public class AlbumCollectionService  {
         return albumCollectionMapper.toDTO(albumCollectionRepository.save(session));
     }
 
+    @Transactional
+    public AlbumCollectionDTO DeregisterArtist(Long sessionId, Long attendeeId) {
+        AlbumCollection session = albumCollectionRepository.findById(sessionId)
+                .orElse(null);
+        Artist artist = artistRepository.findById(attendeeId)
+                .orElse(null);
+        if (session == null || artist == null) {
+            return null;
+        }
+        session.getArtists().remove(artist);
+        return albumCollectionMapper.toDTO(albumCollectionRepository.save(session));
+    }
+
 
 
     @Transactional
@@ -87,6 +100,19 @@ public class AlbumCollectionService  {
             return null;
         }
         session.getTracks().add(track);
+        return albumCollectionMapper.toDTO(albumCollectionRepository.save(session));
+    }
+
+    @Transactional
+    public AlbumCollectionDTO DeregisterTrack(Long sessionId, Long trackId) {
+        AlbumCollection session = albumCollectionRepository.findById(sessionId)
+                .orElse(null);
+        Track track = trackRepository.findById(trackId)
+                .orElse(null);
+        if (session == null || track == null) {
+            return null;
+        }
+        session.getTracks().remove(track);
         return albumCollectionMapper.toDTO(albumCollectionRepository.save(session));
     }
 
