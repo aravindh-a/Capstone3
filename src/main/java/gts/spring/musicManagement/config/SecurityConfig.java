@@ -17,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @RequiredArgsConstructor
-@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     private final JwtUtil jwtUtil;
@@ -29,9 +28,10 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .anyRequest().authenticated()
+                                .anyRequest()
+//                        .anyRequest().authenticated()
                 );
 
         http.addFilterBefore(new JwtFilter(userRepository, jwtUtil), UsernamePasswordAuthenticationFilter.class);
@@ -54,10 +54,10 @@ public class SecurityConfig {
                 .map(user -> User.builder()
                         .username(user.getUsername())
                         .password(user.getPassword())
-                        .roles(user.getRoles()
-                                .stream()
-                                .map(gts.spring.musicManagement.entity.Role::getName) // Remove if your DB already stores pure names
-                                .toArray(String[]::new))
+                        .build())
+                .map(user -> User.withUsername(user.getUsername())
+                        .password(user.getPassword())
+                        .authorities("USER")
                         .build())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }

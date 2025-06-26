@@ -18,15 +18,15 @@ import java.util.Set;
 @Profile("test")
 public class TestDataInitializer {
     @Bean
-    public CommandLineRunner loadData(UserRepository userRepository, RoleRepository roleRepository) {
+    public CommandLineRunner loadData(UserRepository userRepository) {
         return args -> {
-            Role userRole = roleRepository.findByName("USER").orElseGet(() -> roleRepository.save(Role.builder().name("USER").build()));
-            Role adminRole = roleRepository.findByName("ADMIN").orElseGet(() -> roleRepository.save(Role.builder().name("ADMIN").build()));
+//            Role userRole = roleRepository.findByName("USER").orElseGet(() -> roleRepository.save(Role.builder().name("USER").build()));
+//            Role adminRole = roleRepository.findByName("ADMIN").orElseGet(() -> roleRepository.save(Role.builder().name("ADMIN").build()));
 
             User user = new User();
             user.setUsername("testuser");
             user.setPassword(new BCryptPasswordEncoder().encode("password"));
-            user.setRoles(Set.of(userRole));
+//            user.setRoles(Set.of(userRole));
             if (userRepository.findByUsername("testuser").isPresent()) {
                 return;
             }
@@ -35,7 +35,7 @@ public class TestDataInitializer {
             User admin = new User();
             admin.setUsername("testadmin");
             admin.setPassword(new BCryptPasswordEncoder().encode("adminpassword"));
-            admin.setRoles(Set.of(userRole, adminRole));
+//            admin.setRoles(Set.of(userRole, adminRole));
             if (userRepository.findByUsername("testadmin").isPresent()) {
                 return;
             }

@@ -16,8 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-
-public class  LoginController {
+public class LoginController {
 
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
@@ -32,10 +31,9 @@ public class  LoginController {
         User user = User.builder()
                 .username(request.username())
                 .password(passwordEncoder.encode(request.password()))
-                .roles(request.roles())
                 .build();
         userRepository.save(user);
-        return ResponseEntity.ok("User registered successfully");
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
